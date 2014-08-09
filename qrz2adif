@@ -1,0 +1,4 @@
+if [[ -z "$1" ]]; then
+ exit 1;
+fi;
+grep -h -A 13 -r "class=\"lrow \" data-rownum" $1 | rep "\t" | rep "    " | rep "\<\/td\>" "" | rep "&#216;" "0" |rep "<td class=\"lde\" .*\">" "<CALL:\?>" | rep "<td class=\"lba\" .*\">" "<BAND:?>" | rep "<td class=\"ldt\" .*\">" "<QSO_DATE:?>" | rep "<td class=\"ltm\" .*\">" "<TIME_ON:?>"| rep "<td class=\"lfr\" .*\">" "<FREQ:?>"| rep "<td class=\"lmo\" .*\">" "<MODE:?>"| rep "<td class=\"lgr\" .*\">" "<LOC:?>" | rep "<td class=\"lcc\" on.*\">" "<DXCC:?>"| rep "<td class=\"lcc\" .*\">" "<NOTES:?>" | rep "<td.*tr>" "<EOR>" | grep -v "<img\|<tr\|<td\|--" | rep "(\d\d):(\d\d)" "\1\2" | rep "(\d\d\d\d)-(\d\d)-(\d\d)" "\1\2\3" 
