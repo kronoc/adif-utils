@@ -3,27 +3,40 @@
 use warnings;
 use strict;
 
-my $htmlFile = "/tmp/tmp.html";
-my $adifFile;
-my $adifData;
+my $adifData = "";
+my @fields = (
+	[ "lde", "CALL" ],
+	[ "lba", "BAND" ],
+        [ "lbt", "QSO_DATE" ],
+        [ "ltm", "TIME_ON" ],
+        [ "lfr", "FREQ" ],
+        [ "lmo", "MODE" ],
+        [ "lgr", "LOC" ],
+        [ "lcc", "DXCC" ],	
+    );
+
 binmode STDOUT, ':encoding(utf8)';
 binmode STDERR, ':encoding(utf8)';
-open my $data, $htmlFile or die "Could not open $htmlFile: $!";
-while( my $line = <$data>)  {
+
+while( my $line = <>)  {
 	$adifData = $adifData . extract($line);
-	$adifData = enrich($adifData);
 }
-writeadif($adifData,$adifFile);
+writeadif($adifData);
 
 sub extract{
-#grep -h -A 13 -r "class=\"lrow \" data-rownum" $1 | rep "\t" | rep "    " | rep "\<\/td\>" "" | rep "&#216;" "0" |rep "<td class=\"lde\" .*\">" "<CALL:\?>" | rep "<td class=\"lba\" .*\">" "<BAND:?>" | rep "<td class=\"ldt\" .*\">" "<QSO_DATE:?>" | rep "<td class=\"ltm\" .*\">" "<TIME_ON:?>"| rep "<td class=\"lfr\" .*\">" "<FREQ:?>"| rep "<td class=\"lmo\" .*\">" "<MODE:?>"| rep "<td class=\"lgr\" .*\">" "<LOC:?>" | rep "<td class=\"lcc\" on.*\">" "<DXCC:?>"| rep "<td class=\"lcc\" .*\">" "<NOTES:?>" | rep "<td.*tr>" "<EOR>" | grep -v "<img\|<tr\|<td\|--" | rep "(\d\d):(\d\d)" "\1\2" | rep "(\d\d\d\d)-(\d\d)-(\d\d)" "\1\2\3"
-}
-
-sub enrich{
-
+	my $line = shift(@_);
+	my $return = "";
+	foreach my $field(@fields){
+		#print @$field[0];
+		if ($line =~ /<td class=\"@$field[0]\" .*\">(.*)<\/td>/) {
+		$return = "<@$field[1]:".length($1).">$1\n";
+		};
+	}
+	return $return;
 }
 
 sub writeadif{
-
+	my $data = shift(@_);
+	print "$data";
 }
 
