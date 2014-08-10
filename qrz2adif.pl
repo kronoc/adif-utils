@@ -14,7 +14,7 @@ my @fields = (
         [ "lgr", "LOC" ],
         [ "lcc", "DXCC" ],	
     );
-
+#handle EOR and DXCC
 binmode STDOUT, ':encoding(utf8)';
 binmode STDERR, ':encoding(utf8)';
 
@@ -25,14 +25,11 @@ writeadif($adifData);
 
 sub extract{
 	my $line = shift(@_);
-	my $return = "";
 	foreach my $field(@fields){
-		#print @$field[0];
-		if ($line =~ /<td class=\"@$field[0]\" .*\">(.*)<\/td>/) {
-		$return = "<@$field[1]:".length($1).">$1\n";
+		if (($line =~ /<td class=\"@$field[0]\" .*\">(.*)<\/td>/) && ($line !~ /<img src.*\/>/)) {
+		return "<@$field[1]:".length($1).">$1\n";
 		};
 	}
-	return $return;
 }
 
 sub writeadif{
