@@ -4,9 +4,9 @@ use warnings;
 use strict;
 
 our @adif_defaults;
-require "./adif-defaults.conf";
 
-my $adifData = "";
+require "./adif-defaults.conf";
+#require "../../../Dropbox/Personal/docs/radio/adif-defaults.conf";
 
 my @fields = (
 	[ "lde", "CALL" ],
@@ -21,6 +21,7 @@ my @fields = (
     );
 
 my $eor = "<EOR>";
+my $blank_grid = "JJ00aa";
 
 binmode STDOUT, ':encoding(utf8)';
 binmode STDERR, ':encoding(utf8)';
@@ -33,7 +34,7 @@ sub extract {
 	my $line = shift(@_);
 	foreach my $field(@fields){
 		if (($line =~ /<td class=\"@$field[0]\".*\">(.*)<\/td>/) && ($line !~ /<img src.*\/>/)) {
-			if ($1 ne " "){
+			if ($1 ne " " && $1 ne $blank_grid){
 				return "<@$field[1]:".length($1).">".clean($1)."\n";
 			}
 		}
