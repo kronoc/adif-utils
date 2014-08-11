@@ -16,22 +16,26 @@ my @fields = (
 	[ "lcc\" style=", "OP" ],	
     );
 
+my $default = "";
+my $eor = "<EOR>";
+
 binmode STDOUT, ':encoding(utf8)';
 binmode STDERR, ':encoding(utf8)';
 
 while( my $line = <>)  {
-	$adifData = $adifData . extract($line);
+	print extract($line);
 }
-writeadif($adifData);
 
 sub extract{
 	my $line = shift(@_);
 	foreach my $field(@fields){
 		if (($line =~ /<td class=\"@$field[0]\".*\">(.*)<\/td>/) && ($line !~ /<img src.*\/>/)) {
-		if ($1 ne " "){return "<@$field[1]:".length($1).">".clean($1)."\n";}
+			if ($1 ne " "){
+				return "<@$field[1]:".length($1).">".clean($1)."\n";
+			}
 		}
 		if ($line =~ /<td class="lac">(.*)<\/td>/) {
-                return "<EOR>\n";
+                	return "$default$eor\n";
                 }
 	}
 }
@@ -48,9 +52,5 @@ sub clean{
                 $value =~ s/(\d\d\d\d)-(\d\d)-(\d\d)/$1$2$3/g;
         }
 	return $value;
-}
-sub writeadif{
-	my $data = shift(@_);
-	print "$data";
 }
 
