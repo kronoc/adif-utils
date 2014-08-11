@@ -35,13 +35,15 @@ sub extract {
 	foreach my $field(@fields){
 		if (($line =~ /<td class=\"@$field[0]\".*\">(.*)<\/td>/) && ($line !~ /<img src.*\/>/)) {
 			if ($1 ne " " && $1 ne $blank_grid){
-				return "<@$field[1]:".length($1).">".clean($1)."\n";
+				return "<@$field[1]:".length($1).">".clean($1)."\n\t";
 			}
 		}
 		if ($line =~ /<td class="lac">(.*)<\/td>/) {
 			my $station = "";
 			foreach my $default(@adif_defaults){
-				$station = $station . "<@$default[0]:".length(@$default[1]).">".@$default[1]."\n";
+				my $tab = "\t";
+				if ($station eq ""){$tab="";}
+				$station = $station . "$tab<@$default[0]:".length(@$default[1]).">".@$default[1]."\n";
 			}
                 	return $station . $eor ."\n";
                 }
