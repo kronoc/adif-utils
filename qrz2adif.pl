@@ -40,10 +40,10 @@ sub extract {
 		}
 		if ($line =~ /<td class="lac">(.*)<\/td>/) {
 			my $station = "";
+			my $tab = "";
 			foreach my $default(@adif_defaults){
-				my $tab = "\t";
-				if ($station eq ""){$tab="";}
 				$station = $station . "$tab<@$default[0]:".length(@$default[1]).">".@$default[1]."\n";
+				$tab = "\t";
 			}
                 	return $station . $eor ."\n";
                 }
