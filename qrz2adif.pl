@@ -16,7 +16,7 @@ my @fields = (
 	[ "lcc\" style=", "OP" ],	
     );
 
-my $default = "";
+my $default = "<MY_CALL>M0HMK\n<MY_QTH>IO90XU";
 my $eor = "<EOR>";
 
 binmode STDOUT, ':encoding(utf8)';
