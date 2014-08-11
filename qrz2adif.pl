@@ -3,7 +3,11 @@
 use warnings;
 use strict;
 
+our @adif_defaults;
+require "./adif-defaults.conf";
+
 my $adifData = "";
+
 my @fields = (
 	[ "lde", "CALL" ],
 	[ "lba", "BAND" ],
@@ -11,22 +15,21 @@ my @fields = (
         [ "ltm", "TIME_ON" ],
         [ "lfr", "FREQ" ],
         [ "lmo", "MODE" ],
-        [ "lgr", "LOC" ],
-        [ "lcc\" onclick=", "DXCC" ],
-	[ "lcc\" style=", "OP" ],	
+        [ "lgr", "GRIDSQUARE" ],
+        [ "lcc\" onclick=", "COUNTRY" ],
+	[ "lcc\" style=", "NAME" ],	
     );
 
-my $default = "<MY_CALL:5>Q0QQQ\n<MY_QTH:6>II33ZZ\n";
 my $eor = "<EOR>";
 
 binmode STDOUT, ':encoding(utf8)';
 binmode STDERR, ':encoding(utf8)';
 
-while( my $line = <>)  {
+while (my $line = <>)  {
 	print extract($line);
 }
 
-sub extract{
+sub extract {
 	my $line = shift(@_);
 	foreach my $field(@fields){
 		if (($line =~ /<td class=\"@$field[0]\".*\">(.*)<\/td>/) && ($line !~ /<img src.*\/>/)) {
@@ -35,12 +38,16 @@ sub extract{
 			}
 		}
 		if ($line =~ /<td class="lac">(.*)<\/td>/) {
-                	return "$default$eor\n";
+			my $station = "";
+			foreach my $default(@adif_defaults){
+				$station = $station . "<@$default[0]:".length(@$default[1]).">".@$default[1]."\n";
+			}
+                	return $station . $eor ."\n";
                 }
 	}
 }
 
-sub clean{
+sub clean {
 	my $value = shift(@_);
 	if ($value =~ /&#216;/){
 		$value =~ s/&#216;/0/g;
