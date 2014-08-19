@@ -35,7 +35,7 @@ sub extract {
 	foreach my $field(@fields){
 		if (($line =~ /<td class=\"@$field[0]\".*\">(.*)<\/td>/) && ($line !~ /<img src.*\/>/)) {
 			if ($1 ne " " && $1 ne $blank_grid){
-				return "<@$field[1]:".length($1).">".clean($1)."\n\t";
+				return "<@$field[1]:".length(clean($1)).">".clean($1)."\n\t";
 			}
 		}
 		if ($line =~ /<td class="lac">(.*)<\/td>/) {
