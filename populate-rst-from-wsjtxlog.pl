@@ -3,14 +3,21 @@
 use warnings;
 use strict;
 
-
-my $wsjt_log_file = $ARGV[1];
-my $adif_log_file = $ARGV[0];
-
 my $eor = "<eor>";
 
 binmode STDOUT, ':encoding(utf8)';
 binmode STDERR, ':encoding(utf8)';
+
+my $self = {
+        -adif_log => "/tmp/lotw.adif",
+	-wsjt_log => "/tmp/wsjtx.log",
+	-callsign => "Q0AAA",
+	-user => 'info@conor.foo',
+        @ARGV
+};
+
+my $wsjt_log_file = $self->{"-wsjt_log"};
+my $adif_log_file = $self->{"-adif_log"};
 
 main();
 
