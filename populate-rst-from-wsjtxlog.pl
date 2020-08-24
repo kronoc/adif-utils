@@ -10,13 +10,13 @@ binmode STDERR, ':encoding(utf8)';
 
 my $self = {
         -adif_log => "/tmp/lotw.adif",
-	-wsjt_log => "/tmp/wsjtx.log",
+	-wsjtx_log => "/tmp/wsjtx.log",
 	-callsign => "Q0AAA",
 	-user => 'info@conor.foo',
         @ARGV
 };
 
-my $wsjt_log_file = $self->{"-wsjt_log"};
+my $wsjt_log_file = $self->{"-wsjtx_log"};
 my $adif_log_file = $self->{"-adif_log"};
 
 main();
